@@ -7,14 +7,17 @@ import ctypes
 import tempfile
 from win10toast_persist import ToastNotifier
 from pystray import Icon, Menu, MenuItem
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageTk
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
+from tkinter import font as tkFont
+import datetime
 
 # Initialisation
 notifier = ToastNotifier()
 deleted_files = 0
 errors = 0
+last_cleanup = None
 
 # Dossiers et fichiers à exclure du nettoyage
 EXCLUDED_PATHS = [
@@ -55,9 +58,9 @@ EXCLUDED_PATHS = [
 def hide_console():
     """Cache la fenêtre console au démarrage"""
     if os.name == 'nt':
-        import win32gui
-        import win32con
         try:
+            import win32gui
+            import win32con
             hwnd = win32gui.GetForegroundWindow()
             win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
         except:
@@ -188,6 +191,7 @@ def clear_browser_cache_safe():
                 errors += 1
 
 def perform_cleanup():
+    global last_cleanup
     temp1 = tempfile.gettempdir()
     temp2 = "C:\\Windows\\Temp"
 
@@ -202,6 +206,7 @@ def perform_cleanup():
     clear_dns()
 
     total = count1 + count2
+    last_cleanup = datetime.datetime.now()
     
     # Notification discrète (plus courte)
     notifier.show_toast("AutoCleaner",
@@ -213,49 +218,288 @@ def schedule_cleanup():
         perform_cleanup()
         time.sleep(600)  # Toutes les 10 minutes (moins fréquent)
 
+def format_file_size(size_bytes):
+    """Convertit la taille en bytes vers un format lisible"""
+    if size_bytes == 0:
+        return "0 B"
+    size_names = ["B", "KB", "MB", "GB"]
+    i = 0
+    while size_bytes >= 1024 and i < len(size_names) - 1:
+        size_bytes /= 1024.0
+        i += 1
+    return f"{size_bytes:.1f} {size_names[i]}"
+
+def get_disk_usage():
+    """Récupère l'utilisation du disque système"""
+    try:
+        import shutil
+        total, used, free = shutil.disk_usage("C:\\")
+        return {
+            'total': format_file_size(total),
+            'used': format_file_size(used),
+            'free': format_file_size(free),
+            'percent': round((used / total) * 100, 1)
+        }
+    except:
+        return None
+
+def load_logo():
+    """Charge le logo depuis AutoCleanerLogo.ico ou .png"""
+    logo_paths = [
+        os.path.join(os.path.dirname(__file__), "AutoCleanerLogo.ico"),
+        os.path.join(os.path.dirname(__file__), "AutoCleanerLogo.png"),
+        os.path.join(os.getcwd(), "AutoCleanerLogo.ico"),
+        os.path.join(os.getcwd(), "AutoCleanerLogo.png")
+    ]
+    
+    for logo_path in logo_paths:
+        if os.path.exists(logo_path):
+            try:
+                img = Image.open(logo_path)
+                # Redimensionner pour l'interface
+                img_resized = img.resize((48, 48), Image.Resampling.LANCZOS)
+                return ImageTk.PhotoImage(img_resized)
+            except Exception as e:
+                print(f"Erreur lors du chargement du logo {logo_path}: {e}")
+                continue
+    
+    return None
+
 def show_stats():
     root = tk.Tk()
-    root.title("AutoCleaner - Statistiques")
-    root.geometry("350x200")
+    root.title("AutoCleaner - Dashboard")
+    root.geometry("550x650")
     root.resizable(False, False)
+    root.configure(bg='#1e1e1e')  # Fond sombre moderne
     
     # Centrer la fenêtre
     root.eval('tk::PlaceWindow . center')
-
-    lbl1 = tk.Label(root, text=f"Fichiers supprimés : {deleted_files}", font=("Segoe UI", 11))
-    lbl1.pack(pady=10)
-
-    lbl2 = tk.Label(root, text=f"Erreurs rencontrées : {errors}", font=("Segoe UI", 11))
-    lbl2.pack(pady=5)
     
-    lbl3 = tk.Label(root, text="Mode discret activé 🔒", font=("Segoe UI", 9), fg="green")
-    lbl3.pack(pady=5)
+    # Style moderne
+    style = ttk.Style()
+    style.theme_use('clam')
+    style.configure('Title.TLabel', background='#1e1e1e', foreground='#ffffff', font=('Segoe UI', 16, 'bold'))
+    style.configure('Subtitle.TLabel', background='#1e1e1e', foreground='#b0b0b0', font=('Segoe UI', 10))
+    style.configure('Stats.TLabel', background='#2d2d2d', foreground='#ffffff', font=('Segoe UI', 11))
+    style.configure('Modern.TButton', font=('Segoe UI', 10))
+
+    # Header avec logo amélioré
+    header_frame = tk.Frame(root, bg='#1e1e1e', height=80)
+    header_frame.pack(fill='x', padx=20, pady=(20, 10))
+    header_frame.pack_propagate(False)
+    
+    # Charger le logo
+    logo_tk = load_logo()
+    
+    if logo_tk:
+        logo_label = tk.Label(header_frame, image=logo_tk, bg='#1e1e1e')
+        logo_label.image = logo_tk  # Garder une référence
+        logo_label.pack(side='left', padx=(0, 15))
+    
+    # Titre et sous-titre
+    title_frame = tk.Frame(header_frame, bg='#1e1e1e')
+    title_frame.pack(side='left', fill='y')
+    
+    title_label = tk.Label(title_frame, text="AutoCleaner", 
+                          font=('Segoe UI', 18, 'bold'), 
+                          fg='#00d4aa', bg='#1e1e1e')
+    title_label.pack(anchor='w')
+    
+    subtitle_label = tk.Label(title_frame, text="Maintenance Système Intelligente", 
+                             font=('Segoe UI', 9), 
+                             fg='#888888', bg='#1e1e1e')
+    subtitle_label.pack(anchor='w')
+    
+    # Status en temps réel
+    status_frame = tk.Frame(root, bg='#2d2d2d', relief='solid', bd=1)
+    status_frame.pack(fill='x', padx=20, pady=10)
+    
+    status_title = tk.Label(status_frame, text="🛡️ Status en Temps Réel", 
+                           font=('Segoe UI', 12, 'bold'), 
+                           fg='#00d4aa', bg='#2d2d2d')
+    status_title.pack(pady=(10, 5))
+    
+    # Indicateur de protection
+    protection_frame = tk.Frame(status_frame, bg='#2d2d2d')
+    protection_frame.pack(fill='x', padx=15, pady=5)
+    
+    protection_indicator = tk.Label(protection_frame, text="●", 
+                                   font=('Segoe UI', 20), 
+                                   fg='#00ff00', bg='#2d2d2d')
+    protection_indicator.pack(side='left')
+    
+    protection_text = tk.Label(protection_frame, text="Mode Discret Activé", 
+                              font=('Segoe UI', 10), 
+                              fg='#ffffff', bg='#2d2d2d')
+    protection_text.pack(side='left', padx=(5, 0))
+    
+    # Dernier nettoyage
+    if last_cleanup:
+        last_clean_text = f"Dernier nettoyage: {last_cleanup.strftime('%H:%M:%S')}"
+    else:
+        last_clean_text = "Aucun nettoyage effectué"
+    
+    last_clean_label = tk.Label(status_frame, text=last_clean_text, 
+                               font=('Segoe UI', 9), 
+                               fg='#cccccc', bg='#2d2d2d')
+    last_clean_label.pack(pady=(0, 10))
+
+    # Statistiques principales
+    stats_frame = tk.Frame(root, bg='#2d2d2d', relief='solid', bd=1)
+    stats_frame.pack(fill='x', padx=20, pady=10)
+    
+    stats_title = tk.Label(stats_frame, text="📊 Statistiques de Nettoyage", 
+                          font=('Segoe UI', 12, 'bold'), 
+                          fg='#00d4aa', bg='#2d2d2d')
+    stats_title.pack(pady=(10, 5))
+
+    # Grid pour les stats
+    stats_grid = tk.Frame(stats_frame, bg='#2d2d2d')
+    stats_grid.pack(fill='x', padx=15, pady=10)
+    
+    # Fichiers supprimés
+    files_frame = tk.Frame(stats_grid, bg='#3d3d3d', relief='solid', bd=1)
+    files_frame.pack(side='left', fill='both', expand=True, padx=(0, 5))
+    
+    files_number = tk.Label(files_frame, text=str(deleted_files), 
+                           font=('Segoe UI', 20, 'bold'), 
+                           fg='#00d4aa', bg='#3d3d3d')
+    files_number.pack(pady=(10, 0))
+    
+    files_label = tk.Label(files_frame, text="Fichiers\nSupprimés", 
+                          font=('Segoe UI', 9), 
+                          fg='#cccccc', bg='#3d3d3d')
+    files_label.pack(pady=(0, 10))
+    
+    # Erreurs
+    errors_frame = tk.Frame(stats_grid, bg='#3d3d3d', relief='solid', bd=1)
+    errors_frame.pack(side='right', fill='both', expand=True, padx=(5, 0))
+    
+    errors_number = tk.Label(errors_frame, text=str(errors), 
+                            font=('Segoe UI', 20, 'bold'), 
+                            fg='#ff6b6b' if errors > 0 else '#00d4aa', bg='#3d3d3d')
+    errors_number.pack(pady=(10, 0))
+    
+    errors_label = tk.Label(errors_frame, text="Erreurs\nRencontrées", 
+                           font=('Segoe UI', 9), 
+                           fg='#cccccc', bg='#3d3d3d')
+    errors_label.pack(pady=(0, 10))
+
+    # Informations système
+    disk_info = get_disk_usage()
+    if disk_info:
+        disk_frame = tk.Frame(root, bg='#2d2d2d', relief='solid', bd=1)
+        disk_frame.pack(fill='x', padx=20, pady=10)
+        
+        disk_title = tk.Label(disk_frame, text="💾 Espace Disque Système", 
+                             font=('Segoe UI', 12, 'bold'), 
+                             fg='#00d4aa', bg='#2d2d2d')
+        disk_title.pack(pady=(10, 5))
+        
+        disk_details = tk.Label(disk_frame, 
+                               text=f"Utilisé: {disk_info['used']} / {disk_info['total']} ({disk_info['percent']}%)\nDisponible: {disk_info['free']}", 
+                               font=('Segoe UI', 10), 
+                               fg='#ffffff', bg='#2d2d2d')
+        disk_details.pack(pady=(0, 10))
+
+    # Boutons d'action PLUS GRANDS
+    buttons_frame = tk.Frame(root, bg='#1e1e1e')
+    buttons_frame.pack(fill='x', padx=20, pady=20)
 
     def force_clean():
+        # Animation de nettoyage
+        clean_btn.configure(text="🧹 Nettoyage...", state='disabled')
+        root.update()
+        
         perform_cleanup()
-        lbl1.config(text=f"Fichiers supprimés : {deleted_files}")
-        lbl2.config(text=f"Erreurs rencontrées : {errors}")
-        messagebox.showinfo("Nettoyage forcé", "Nettoyage sécurisé terminé.")
+        
+        # Mettre à jour les affichages
+        files_number.config(text=str(deleted_files))
+        errors_number.config(text=str(errors), 
+                            fg='#ff6b6b' if errors > 0 else '#00d4aa')
+        
+        if last_cleanup:
+            last_clean_label.config(text=f"Dernier nettoyage: {last_cleanup.strftime('%H:%M:%S')}")
+        
+        clean_btn.configure(text="🧹 Nettoyer Maintenant", state='normal')
+        
+        # Notification de succès
+        messagebox.showinfo("✅ Nettoyage Terminé", 
+                           f"Nettoyage sécurisé terminé avec succès!\n\n"
+                           f"Fichiers supprimés: {deleted_files}\n"
+                           f"Erreurs: {errors}")
 
-    btn = tk.Button(root, text="Nettoyer maintenant", command=force_clean)
-    btn.pack(pady=10)
+    # BOUTONS AGRANDIS avec plus de padding et taille de police plus grande
+    clean_btn = tk.Button(buttons_frame, text="🧹 Nettoyer Maintenant", 
+                         command=force_clean,
+                         font=('Segoe UI', 12, 'bold'),  # Police plus grande
+                         bg='#00d4aa', fg='white', 
+                         relief='flat', 
+                         padx=30, pady=15,  # Padding augmenté
+                         cursor='hand2',
+                         width=18)  # Largeur fixe
+    clean_btn.pack(side='left', padx=(0, 15))
     
-    btn2 = tk.Button(root, text="Fermer", command=root.destroy)
-    btn2.pack(pady=5)
+    close_btn = tk.Button(buttons_frame, text="❌ Fermer", 
+                         command=root.destroy,
+                         font=('Segoe UI', 12),  # Police plus grande
+                         bg='#ff6b6b', fg='white',
+                         relief='flat', 
+                         padx=30, pady=15,  # Padding augmenté
+                         cursor='hand2',
+                         width=12)  # Largeur fixe
+    close_btn.pack(side='right')
 
+    # Footer
+    footer_frame = tk.Frame(root, bg='#1e1e1e', height=40)
+    footer_frame.pack(fill='x', side='bottom')
+    footer_frame.pack_propagate(False)
+    
+    footer_label = tk.Label(footer_frame, text="AutoCleaner v2.0 - Protection Intelligente Activée", 
+                           font=('Segoe UI', 8), 
+                           fg='#666666', bg='#1e1e1e')
+    footer_label.pack(expand=True)
+
+    # Actualisation automatique toutes les 5 secondes
+    def update_stats():
+        if last_cleanup:
+            last_clean_label.config(text=f"Dernier nettoyage: {last_cleanup.strftime('%H:%M:%S')}")
+        root.after(5000, update_stats)
+    
+    update_stats()
+    
     root.mainloop()
 
 def create_image():
-    image_path = os.path.join(os.path.dirname(__file__), "AutoCleanerLogo.ico")
-    if os.path.exists(image_path):
-        return Image.open(image_path).resize((64, 64))
-    else:
-        # Icône plus discrète
-        img = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
-        d = ImageDraw.Draw(img)
-        d.ellipse((16, 16, 48, 48), fill=(34, 139, 34, 180))  # Vert discret
-        d.text((24, 28), "AC", fill=(255, 255, 255, 255))
-        return img
+    """Crée l'icône pour la barre des tâches"""
+    # Chercher d'abord le fichier de logo
+    logo_paths = [
+        os.path.join(os.path.dirname(__file__), "AutoCleanerLogo.ico"),
+        os.path.join(os.path.dirname(__file__), "AutoCleanerLogo.png"),
+        os.path.join(os.getcwd(), "AutoCleanerLogo.ico"),
+        os.path.join(os.getcwd(), "AutoCleanerLogo.png")
+    ]
+    
+    for logo_path in logo_paths:
+        if os.path.exists(logo_path):
+            try:
+                return Image.open(logo_path).resize((64, 64), Image.Resampling.LANCZOS)
+            except Exception as e:
+                print(f"Erreur lors du chargement du logo {logo_path}: {e}")
+                continue
+    
+    # Créer une icône par défaut si aucun logo trouvé
+    img = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    
+    # Design moderne avec dégradé simulé
+    d.ellipse((8, 8, 56, 56), fill=(0, 212, 170, 200))  # Cercle principal
+    d.ellipse((12, 12, 52, 52), fill=(0, 180, 140, 255))  # Cercle intérieur
+    
+    # Icône de nettoyage stylisée
+    d.text((32, 32), "AC", fill=(255, 255, 255, 255), anchor="mm")
+    
+    return img
 
 def quit_app(icon, item):
     icon.stop()
@@ -313,7 +557,7 @@ def main():
     icon = Icon("AutoCleaner")
     icon.icon = create_image()
     icon.menu = Menu(
-        MenuItem("📊 Statistiques", lambda: threading.Thread(target=show_stats).start()),
+        MenuItem("📊 Dashboard", lambda: threading.Thread(target=show_stats).start()),
         MenuItem("🧹 Nettoyer maintenant", lambda: threading.Thread(target=perform_cleanup).start()),
         MenuItem("❌ Quitter", quit_app)
     )
