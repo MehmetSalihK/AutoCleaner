@@ -1,0 +1,4 @@
+win10toast-persist
+pystray
+Pillow
+pywin32

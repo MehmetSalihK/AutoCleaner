@@ -1,126 +1,162 @@
 # 🧹 AutoCleaner
 
-**AutoCleaner** est une application Windows légère qui nettoie automatiquement les fichiers temporaires, les logs système, et la mémoire DNS toutes les 5 minutes en tâche de fond. Un menu dans la barre des tâches permet de suivre les statistiques en temps réel.
+**AutoCleaner** est une application Windows légère et autonome qui nettoie automatiquement les fichiers temporaires, les journaux système et le cache DNS toutes les 5 minutes, en s’exécutant discrètement en arrière-plan.
+Un menu accessible depuis la barre des tâches permet de suivre en temps réel les statistiques de nettoyage.
 
 ---
 
-## 📚 Table des Matières
+## 📚 Table des matières
 
-- [🎯 Objectifs](#-objectifs)
-- [✨ Fonctionnalités](#-fonctionnalités)
-- [🛠️ Installation](#-installation)
-- [🚀 Utilisation](#-utilisation)
-- [📡 API](#-api)
-- [🎁 Bonus](#-bonus)
-- [🤝 Contribuer](#-contribuer)
-- [📄 Licence](#-licence)
+* [🎯 Objectifs](#-objectifs)
+* [✨ Fonctionnalités](#-fonctionnalités)
+* [🛠️ Installation](#-installation)
+* [📋 Requirements](#-requirements)
+* [🚀 Utilisation](#-utilisation)
+* [📡 API](#-api)
+* [🎁 Bonus](#-bonus)
+* [🤝 Contribuer](#-contribuer)
+* [📄 Licence](#-licence)
 
 ---
 
 ## 🎯 Objectifs
 
-L'objectif d'AutoCleaner est d'automatiser les tâches de nettoyage que l'on fait manuellement :
-- Gagner de l’espace disque
-- Améliorer la stabilité et les performances
-- Éviter les fichiers inutiles qui s’accumulent
-- Avoir une interface simple et sans prise de tête
+AutoCleaner vise à simplifier la maintenance de ton PC en automatisant des tâches souvent fastidieuses, pour :
+
+* Libérer de l’espace disque rapidement
+* Améliorer la stabilité et les performances système
+* Éviter l’accumulation de fichiers inutiles
+* Proposer une interface intuitive et légère
 
 ---
 
 ## ✨ Fonctionnalités
 
-- ✔ Nettoyage automatique des fichiers temporaires (`%temp%` et `C:\Windows\Temp`)
-- ✔ Suppression des journaux Windows (`Application`, `System`, `Security`)
-- ✔ Vidage du cache DNS (`ipconfig /flushdns`)
-- ✔ Notification système après chaque nettoyage
-- ✔ Icône dans la barre des tâches avec menu contextuel :
-  - Voir les statistiques
-  - Lancer un nettoyage manuel
-  - Quitter l’application
-- ✔ Démarrage automatique avec Windows
+* ✅ Nettoyage automatique des fichiers temporaires (`%temp%` et `C:\Windows\Temp`)
+* ✅ Suppression des journaux Windows (`Application`, `System`, `Security`)
+* ✅ Vidage du cache DNS (`ipconfig /flushdns`)
+* ✅ Notification Windows après chaque opération de nettoyage
+* ✅ Icône dans la barre des tâches avec menu contextuel :
+
+  * Affichage des statistiques en temps réel
+  * Nettoyage manuel à la demande
+  * Quitter proprement l’application
+* ✅ Lancement automatique au démarrage de Windows
 
 ---
 
 ## 🛠️ Installation
 
-1. **Pré-requis** :
-   - Windows 10 ou 11
-   - Python 3.8+
-   - Être administrateur (requis au premier lancement)
+### Pré-requis
 
-2. **Cloner le dépôt** :
+* Windows 10 ou 11
+* Python 3.8 ou supérieur
+* Droits administrateur (nécessaires au premier lancement)
+
+### Étapes
+
+1. Cloner le dépôt :
+
    ```bash
    git clone https://github.com/ton-utilisateur/AutoCleaner.git
    cd AutoCleaner
    ```
 
-3. **Installer les dépendances** :
+2. Installer les dépendances :
+
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **(Facultatif) Créer l’exécutable** :
+3. (Optionnel) Créer un exécutable autonome avec PyInstaller :
+
    ```bash
    pyinstaller --onefile --noconsole autocleaner.py
    ```
 
 ---
 
+## 📋 Requirements
+
+Voici un exemple de contenu pour le fichier `requirements.txt` :
+
+```
+psutil>=5.9.0
+win10toast-persist>=0.9.4
+pywin32>=305
+```
+
+* `psutil` : Pour interagir avec les processus et gérer les fichiers système
+* `win10toast-persist` : Pour afficher des notifications Windows persistantes
+* `pywin32` : Pour accéder aux API Windows (gestion des logs, etc.)
+
+---
+
 ## 🚀 Utilisation
 
-### ▶ Lancer le script
+### Démarrer le programme
+
 ```bash
 python autocleaner.py
 ```
 
-💡 Un redémarrage en mode administrateur est automatique si nécessaire.
+> ⚠️ Le script redémarre automatiquement avec les droits administrateur si nécessaire.
 
-### 📊 Interface disponible
-- Icône dans la **barre des tâches**
-- Clic droit → **Statistiques** / **Quitter**
+### Interface disponible
+
+* Icône dans la barre des tâches Windows
+* Menu contextuel accessible par clic droit :
+
+  * **Statistiques** : affiche le nombre de fichiers supprimés et erreurs rencontrées
+  * **Quitter** : ferme l’application
 
 ---
 
 ## 📡 API
 
-AutoCleaner ne fournit pas encore d'API externe, mais voici ce que tu peux intégrer :
+Pas d’API REST ou web, mais une API Python simple à intégrer :
 
-| Fonction | Description |
-|---------|-------------|
-| `perform_cleanup()` | Lance le nettoyage complet |
-| `clear_temp_folder(path)` | Supprime les fichiers dans le dossier donné |
-| `clear_logs()` | Vide les journaux système |
-| `clear_dns()` | Vide le cache DNS |
+| Fonction                  | Description                        |
+| ------------------------- | ---------------------------------- |
+| `perform_cleanup()`       | Lance un nettoyage complet         |
+| `clear_temp_folder(path)` | Supprime les fichiers d’un dossier |
+| `clear_logs()`            | Vide les journaux système          |
+| `clear_dns()`             | Vide le cache DNS                  |
 
-Tu peux intégrer ces fonctions dans d'autres scripts Python.
+Idéal pour automatiser ou étendre la gestion dans d’autres scripts.
 
 ---
 
 ## 🎁 Bonus
 
-- ✅ Mode **threadé** : tourne en arrière-plan sans bloquer l’interface
-- 🛠️ Se recrée automatiquement au démarrage de Windows
-- 🔔 Notifications persistantes avec `win10toast_persist`
-- 💡 Interface tkinter simple et efficace pour les stats
+* Fonctionnement multithreadé, sans bloquer l’interface
+* Ajout automatique au démarrage de Windows via création de raccourci
+* Notifications persistantes grâce à `win10toast_persist`
+* Interface graphique simple et efficace en Tkinter
 
 ---
 
 ## 🤝 Contribuer
 
-Tu es le·la bienvenu·e ! Voici comment contribuer :
+Tu souhaites participer ? Voici comment faire :
 
 1. Fork le dépôt
-2. Crée une branche (`git checkout -b feature/ton-idee`)
-3. Commit tes modifications (`git commit -am 'Ajoute une fonctionnalité'`)
-4. Push la branche (`git push origin feature/ton-idee`)
-5. Crée une **Pull Request**
+2. Crée ta branche de fonctionnalité (`git checkout -b feature/ma-fonctionnalite`)
+3. Commit tes changements (`git commit -m "Ajout de ma fonctionnalité"`)
+4. Push ta branche (`git push origin feature/ma-fonctionnalite`)
+5. Ouvre une Pull Request
 
 ---
 
 ## 📄 Licence
 
-Ce projet est sous licence **MIT**. Voir le fichier [`LICENSE`](LICENSE) pour plus de détails.
+Ce projet est distribué sous licence **MIT**.
+Voir le fichier [`LICENSE`](LICENSE) pour les détails.
 
 ---
 
-🔒 *Développé avec ❤️ pour garder ton PC propre sans prise de tête.*
+🔒 *Développé avec ❤️ pour que ton PC reste propre sans effort.*
+
+---
+
+Si tu veux, je peux aussi t’aider à générer un `requirements.txt` automatiquement selon tes imports exacts !
