@@ -1,7 +1,11 @@
 # 🧹 AutoCleaner
 
-**AutoCleaner** est une application Windows légère et autonome qui nettoie automatiquement les fichiers temporaires, les journaux système et le cache DNS toutes les 5 minutes, en s’exécutant discrètement en arrière-plan.
-Un menu accessible depuis la barre des tâches permet de suivre en temps réel les statistiques de nettoyage.
+**AutoCleaner** est une application Windows intelligente et discrète qui maintient automatiquement votre système propre en nettoyant les fichiers temporaires, optimisant les performances et protégeant vos données importantes. Fonctionne silencieusement en arrière-plan sans interruption.
+
+[![Windows](https://img.shields.io/badge/Windows-10%2F11-blue?logo=windows)](https://www.microsoft.com/windows)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-green?logo=python)](https://www.python.org)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-success)](https://github.com)
 
 ---
 
@@ -9,10 +13,13 @@ Un menu accessible depuis la barre des tâches permet de suivre en temps réel l
 
 * [🎯 Objectifs](#-objectifs)
 * [✨ Fonctionnalités](#-fonctionnalités)
-* [🛠️ Installation](#-installation)
+* [🛡️ Sécurité et Protection](#️-sécurité-et-protection)
+* [🛠️ Installation](#️-installation)
 * [📋 Requirements](#-requirements)
 * [🚀 Utilisation](#-utilisation)
-* [📡 API](#-api)
+* [⚙️ Configuration](#️-configuration)
+* [📊 Monitoring](#-monitoring)
+* [🔧 Dépannage](#-dépannage)
 * [🎁 Bonus](#-bonus)
 * [🤝 Contribuer](#-contribuer)
 * [📄 Licence](#-licence)
@@ -21,142 +28,289 @@ Un menu accessible depuis la barre des tâches permet de suivre en temps réel l
 
 ## 🎯 Objectifs
 
-AutoCleaner vise à simplifier la maintenance de ton PC en automatisant des tâches souvent fastidieuses, pour :
+AutoCleaner révolutionne la maintenance PC en automatisant intelligemment les tâches de nettoyage pour :
 
-* Libérer de l’espace disque rapidement
-* Améliorer la stabilité et les performances système
-* Éviter l’accumulation de fichiers inutiles
-* Proposer une interface intuitive et légère
+* ⚡ **Performance** : Libération d'espace disque et optimisation système
+* 🛡️ **Sécurité** : Protection des données importantes (navigateurs, profils)
+* 🥷 **Discrétion** : Fonctionnement invisible sans interruption
+* 🔄 **Automatisation** : Maintenance continue sans intervention
 
 ---
 
 ## ✨ Fonctionnalités
 
-* ✅ Nettoyage automatique des fichiers temporaires (`%temp%` et `C:\Windows\Temp`)
-* ✅ Suppression des journaux Windows (`Application`, `System`, `Security`)
-* ✅ Vidage du cache DNS (`ipconfig /flushdns`)
-* ✅ Notification Windows après chaque opération de nettoyage
-* ✅ Icône dans la barre des tâches avec menu contextuel :
+### 🧹 **Nettoyage Intelligent**
+* ✅ Nettoyage automatique des fichiers temporaires (`%temp%`, `C:\Windows\Temp`)
+* ✅ Suppression sélective des journaux système (préservation des logs critiques)
+* ✅ Vidage optimisé du cache DNS
+* ✅ Nettoyage sécurisé du cache navigateur (sans données utilisateur)
+* ✅ Filtrage intelligent : préservation des fichiers récents (<24h) et importants
 
-  * Affichage des statistiques en temps réel
-  * Nettoyage manuel à la demande
-  * Quitter proprement l’application
-* ✅ Lancement automatique au démarrage de Windows
+### 🛡️ **Protection Avancée**
+* 🔒 **Navigation** : Préservation de l'historique, cookies, mots de passe
+* 📁 **Applications** : Protection des profils Chrome, Firefox, Edge
+* 🎮 **Gaming** : Sauvegarde des données Steam, Epic Games, Discord
+* 💼 **Productivité** : Conservation des paramètres Office, Adobe, Teams
+
+### 🥷 **Mode Furtif**
+* 👻 Démarrage silencieux sans fenêtre console
+* 🔕 Notifications discrètes et courtes
+* ⏰ Nettoyage automatique toutes les 10 minutes
+* 🚀 Lancement automatique au démarrage Windows
+
+### 📊 **Interface Intuitive**
+* 🖱️ Icône système avec menu contextuel
+* 📈 Statistiques en temps réel
+* 🧹 Nettoyage manuel à la demande
+* ⚙️ Configuration simple
+
+---
+
+## 🛡️ Sécurité et Protection
+
+### **Données Préservées**
+```
+🌐 Navigateurs Web
+├── Chrome : Historique, cookies, mots de passe, favoris
+├── Firefox : Profils utilisateur complets
+└── Edge : Sessions et données de connexion
+
+💻 Applications Système
+├── Windows Explorer : Historique de navigation
+├── PowerShell : Historique des commandes
+└── Logs critiques : System, Security
+
+🎯 Applications Tierces
+├── Gaming : Steam, Epic Games, Discord, Spotify
+├── Bureau : Office, Adobe, Teams, Skype
+└── Développement : Git, IDE, configurations
+```
+
+### **Sécurité Renforcée**
+* ⏱️ **Timeout** sur les commandes système (évite les blocages)
+* 🔍 **Vérification** de l'âge et taille des fichiers
+* 🚫 **Exclusion** des fichiers système critiques (.dll, .exe, .sys)
+* 📝 **Logs** des erreurs pour diagnostic
 
 ---
 
 ## 🛠️ Installation
 
-### Pré-requis
+### **Pré-requis**
+* ![Windows](https://img.shields.io/badge/-Windows%2010%2F11-blue?style=flat&logo=windows) 
+* ![Python](https://img.shields.io/badge/-Python%203.8%2B-green?style=flat&logo=python)
+* 🔑 Droits administrateur (premier lancement uniquement)
 
-* Windows 10 ou 11
-* Python 3.8 ou supérieur
-* Droits administrateur (nécessaires au premier lancement)
+### **Installation Rapide**
 
-### Étapes
+```bash
+# 1. Cloner le projet
+git clone https://github.com/votre-nom/AutoCleaner.git
+cd AutoCleaner
 
-1. Cloner le dépôt :
+# 2. Installer les dépendances
+pip install -r requirements.txt
 
-   ```bash
-   git clone https://github.com/ton-utilisateur/AutoCleaner.git
-   cd AutoCleaner
-   ```
+# 3. Lancer le programme
+python autocleaner.py
+```
 
-2. Installer les dépendances :
+### **Création d'un Exécutable**
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+# Installation de PyInstaller
+pip install pyinstaller
 
-3. (Optionnel) Créer un exécutable autonome avec PyInstaller :
+# Génération de l'exécutable (recommandé)
+pyinstaller --onefile --noconsole --name="AutoCleaner" autocleaner.py
 
-   ```bash
-   pyinstaller --onefile --noconsole autocleaner.py
-   ```
+# L'exécutable sera dans le dossier dist/
+```
 
 ---
 
 ## 📋 Requirements
 
-Voici un exemple de contenu pour le fichier `requirements.txt` :
-
-```
-psutil>=5.9.0
+### **requirements.txt**
+```txt
 win10toast-persist>=0.9.4
+pystray>=0.19.4
+Pillow>=9.0.0
 pywin32>=305
+psutil>=5.9.0
 ```
 
-* `psutil` : Pour interagir avec les processus et gérer les fichiers système
-* `win10toast-persist` : Pour afficher des notifications Windows persistantes
-* `pywin32` : Pour accéder aux API Windows (gestion des logs, etc.)
+### **Dépendances Détaillées**
+
+| Package | Version | Usage |
+|---------|---------|--------|
+| `win10toast-persist` | ≥0.9.4 | Notifications Windows persistantes |
+| `pystray` | ≥0.19.4 | Icône système et menu contextuel |
+| `Pillow` | ≥9.0.0 | Génération d'icônes dynamiques |
+| `pywin32` | ≥305 | API Windows (registre, raccourcis) |
+| `psutil` | ≥5.9.0 | Gestion des processus système |
 
 ---
 
 ## 🚀 Utilisation
 
-### Démarrer le programme
-
+### **Démarrage**
 ```bash
+# Lancement normal
 python autocleaner.py
+
+# Ou avec l'exécutable
+AutoCleaner.exe
 ```
 
-> ⚠️ Le script redémarre automatiquement avec les droits administrateur si nécessaire.
+> ⚠️ **Note** : Le programme demande automatiquement les droits administrateur si nécessaire
 
-### Interface disponible
+### **Interface Utilisateur**
 
-* Icône dans la barre des tâches Windows
-* Menu contextuel accessible par clic droit :
+#### **Icône Système** 🖱️
+* **Clic gauche** : Afficher les statistiques
+* **Clic droit** : Menu contextuel
 
-  * **Statistiques** : affiche le nombre de fichiers supprimés et erreurs rencontrées
-  * **Quitter** : ferme l’application
+#### **Menu Contextuel**
+| Option | Action |
+|--------|--------|
+| 📊 Statistiques | Affiche le nombre de fichiers nettoyés |
+| 🧹 Nettoyer maintenant | Lance un nettoyage manuel |
+| ❌ Quitter | Ferme l'application |
 
 ---
 
-## 📡 API
+## ⚙️ Configuration
 
-Pas d’API REST ou web, mais une API Python simple à intégrer :
+### **Personnalisation du Nettoyage**
 
-| Fonction                  | Description                        |
-| ------------------------- | ---------------------------------- |
-| `perform_cleanup()`       | Lance un nettoyage complet         |
-| `clear_temp_folder(path)` | Supprime les fichiers d’un dossier |
-| `clear_logs()`            | Vide les journaux système          |
-| `clear_dns()`             | Vide le cache DNS                  |
+Modifiez la liste `EXCLUDED_PATHS` dans le code pour ajouter vos exclusions :
 
-Idéal pour automatiser ou étendre la gestion dans d’autres scripts.
+```python
+EXCLUDED_PATHS = [
+    # Ajouter vos dossiers à protéger
+    "MonApplication\\ImportantData",
+    "MesDocuments\\Projet"
+]
+```
+
+### **Fréquence de Nettoyage**
+
+```python
+# Dans schedule_cleanup()
+time.sleep(600)  # 600 = 10 minutes
+                 # 300 = 5 minutes
+                 # 1800 = 30 minutes
+```
+
+---
+
+## 📊 Monitoring
+
+### **Statistiques Disponibles**
+* 📁 **Fichiers supprimés** : Compteur total
+* ❌ **Erreurs rencontrées** : Nombre d'échecs
+* ⏰ **Dernière exécution** : Timestamp du dernier nettoyage
+* 🛡️ **Mode protection** : Status des exclusions
+
+### **Logs et Diagnostic**
+Les erreurs sont comptabilisées et affichées dans l'interface statistiques pour un suivi optimal.
+
+---
+
+## 🔧 Dépannage
+
+### **Problèmes Courants**
+
+| Problème | Solution |
+|----------|----------|
+| ❌ Pas de droits admin | Clic droit → "Exécuter en tant qu'administrateur" |
+| 🚫 Notifications non affichées | Vérifier les paramètres de notification Windows |
+| ⏸️ Programme ne démarre pas | Vérifier l'installation de Python et des dépendances |
+| 🔄 Pas de nettoyage auto | Relancer le programme avec droits admin |
+
+### **Désinstallation**
+```bash
+# Supprimer du démarrage automatique
+# Via les paramètres Windows → Applications → Démarrage
+# Ou supprimer la clé registre HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\AutoCleaner
+```
 
 ---
 
 ## 🎁 Bonus
 
-* Fonctionnement multithreadé, sans bloquer l’interface
-* Ajout automatique au démarrage de Windows via création de raccourci
-* Notifications persistantes grâce à `win10toast_persist`
-* Interface graphique simple et efficace en Tkinter
+### **Fonctionnalités Avancées**
+* 🧵 **Multithreading** : Interface réactive, nettoyage en arrière-plan
+* 🔄 **Auto-démarrage** : Ajout automatique au démarrage Windows
+* 🎨 **Icône dynamique** : Génération automatique si logo absent
+* 💾 **Sauvegarde** : Conservation des données critiques utilisateur
+* 🔒 **Mode discret** : Aucune interruption de votre travail
+
+### **Intégration Système**
+* ✅ Compatible Windows 10/11
+* ✅ Fonctionne sur architectures x64/x86
+* ✅ Respect des permissions système
+* ✅ Gestion intelligente des erreurs
 
 ---
 
 ## 🤝 Contribuer
 
-Tu souhaites participer ? Voici comment faire :
+Votre contribution est la bienvenue ! 
 
-1. Fork le dépôt
-2. Crée ta branche de fonctionnalité (`git checkout -b feature/ma-fonctionnalite`)
-3. Commit tes changements (`git commit -m "Ajout de ma fonctionnalité"`)
-4. Push ta branche (`git push origin feature/ma-fonctionnalite`)
-5. Ouvre une Pull Request
+### **Comment Participer**
+1. 🍴 **Fork** le projet
+2. 🌿 **Branche** : `git checkout -b feature/nouvelle-fonctionnalite`
+3. ✏️ **Commit** : `git commit -m "Ajout: nouvelle fonctionnalité"`
+4. 📤 **Push** : `git push origin feature/nouvelle-fonctionnalite`
+5. 🔄 **Pull Request** avec description détaillée
+
+### **Guidelines**
+* 📝 Code commenté et documenté
+* 🧪 Tests sur Windows 10/11
+* 🛡️ Respect des exclusions de sécurité
+* 📚 Mise à jour de la documentation
 
 ---
 
 ## 📄 Licence
 
-Ce projet est distribué sous licence **MIT**.
-Voir le fichier [`LICENSE`](LICENSE) pour les détails.
+```
+MIT License
+
+Copyright (c) 2025 AutoCleaner
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+```
+
+**Voir le fichier [LICENSE](LICENSE) pour les détails complets.**
 
 ---
 
-🔒 *Développé avec ❤️ pour que ton PC reste propre sans effort.*
+## 🔗 Liens Utiles
+
+* 📖 [Documentation Complète](https://github.com/votre-nom/AutoCleaner/wiki)
+* 🐛 [Signaler un Bug](https://github.com/votre-nom/AutoCleaner/issues)
+* 💡 [Demander une Fonctionnalité](https://github.com/votre-nom/AutoCleaner/issues/new)
+* 📧 [Contact](mailto:votre-email@domain.com)
 
 ---
 
-Si tu veux, je peux aussi t’aider à générer un `requirements.txt` automatiquement selon tes imports exacts !
+<div align="center">
+
+**🛡️ Développé avec ❤️ pour maintenir votre PC performant et sécurisé**
+
+![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)
+![Made with Python](https://img.shields.io/badge/Made%20with-Python-blue.svg)
+![Windows](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)
+
+</div>
