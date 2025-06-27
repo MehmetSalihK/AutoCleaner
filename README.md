@@ -1,6 +1,6 @@
-# 🧹 AutoCleaner
+# 🛡️ AutoCleaner Pro v3.0 - Maintenance Système Intelligente
 
-**AutoCleaner** est une application Windows intelligente et discrète qui maintient automatiquement votre système propre en nettoyant les fichiers temporaires, optimisant les performances et protégeant vos données importantes. Fonctionne silencieusement en arrière-plan sans interruption.
+**AutoCleaner Pro** est une application Windows de nouvelle génération qui révolutionne la maintenance système avec une interface moderne, un nettoyage intelligent et des fonctionnalités avancées. Profitez d'un dashboard interactif, de thèmes adaptatifs et d'une configuration personnalisable pour une expérience utilisateur optimale.
 
 [![Windows](https://img.shields.io/badge/Windows-10%2F11-blue?logo=windows)](https://www.microsoft.com/windows)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-green?logo=python)](https://www.python.org)
@@ -37,17 +37,43 @@ AutoCleaner révolutionne la maintenance PC en automatisant intelligemment les t
 
 ---
 
-## ✨ Fonctionnalités
+## ✨ Fonctionnalités Principales
 
-### 🧹 **Nettoyage Intelligent**
-* ✅ Nettoyage automatique des fichiers temporaires (`%temp%`, `C:\Windows\Temp`)
-* ✅ Suppression sélective des journaux système (préservation des logs critiques)
-* ✅ Vidage optimisé du cache DNS
-* ✅ Nettoyage sécurisé du cache navigateur (sans données utilisateur)
-* ✅ Filtrage intelligent : préservation des fichiers récents (<24h) et importants
+### 🎨 **Interface Moderne v3.0**
+* 🖥️ **Dashboard interactif** avec statistiques en temps réel
+* 🌙 **Thème adaptatif** (clair/sombre) selon les préférences système
+* 📊 **Barres de progression** et indicateurs visuels avancés
+* 🎯 **Interface responsive** optimisée pour tous les écrans
+* ⚙️ **Panneau de configuration** intégré et intuitif
 
-### 🛡️ **Protection Avancée**
-* 🔒 **Navigation** : Préservation de l'historique, cookies, mots de passe
+### 🧹 **Nettoyage Intelligent Avancé**
+* ✅ Nettoyage automatique programmable (1-60 minutes)
+* ✅ **Mode nettoyage en profondeur** avec options étendues
+* ✅ Suppression sélective des fichiers temporaires système
+* ✅ Nettoyage sécurisé du cache navigateur (Chrome, Firefox, Edge)
+* ✅ Optimisation du cache DNS et réseau
+* ✅ **Exclusions intelligentes** pour protéger les données importantes
+
+### 🛡️ **Sécurité et Protection Renforcées**
+* 🔒 **Protection des données utilisateur** : Historique, cookies, mots de passe préservés
+* 🛡️ **Exclusions automatiques** des fichiers système critiques
+* ⚠️ **Validation des chemins** avant suppression
+* 📋 **Historique des actions** avec possibilité de traçabilité
+* 🔐 **Exécution sécurisée** avec droits administrateur contrôlés
+
+### 📊 **Monitoring et Statistiques**
+* 📈 **Informations système** en temps réel (CPU, RAM, disque)
+* 📊 **Statistiques de nettoyage** détaillées et historiques
+* 🎯 **Indicateurs de performance** avec alertes intelligentes
+* 📅 **Historique des 50 derniers nettoyages**
+* 💾 **Suivi de l'espace libéré** avec graphiques
+
+### ⚙️ **Configuration Avancée**
+* 🎛️ **Paramètres personnalisables** via interface graphique
+* 🔔 **Notifications configurables** (activation/désactivation)
+* 🚀 **Démarrage automatique** optionnel avec Windows
+* 💾 **Sauvegarde/restauration** des paramètres
+* 🌐 **Support multilingue** (français par défaut)
 * 📁 **Applications** : Protection des profils Chrome, Firefox, Edge
 * 🎮 **Gaming** : Sauvegarde des données Steam, Epic Games, Discord
 * 💼 **Productivité** : Conservation des paramètres Office, Adobe, Teams
