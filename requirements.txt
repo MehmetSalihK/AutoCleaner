@@ -1,10 +1,10 @@
 # AutoCleaner Pro - Dépendances Python
 
 # Interface graphique moderne
-tkinter>=8.6.0
+customtkinter>=5.2.0  # Modern UI
 
 # Notifications système
-plyer>=2.1.0
+winotify>=1.1.0
 
 # Icône système
 pystray>=0.19.4
@@ -13,10 +13,8 @@ Pillow>=9.0.0
 # Gestion des processus système
 psutil>=5.9.0
 
-# Modules standards (inclus avec Python)
-# os, sys, shutil, threading, time, datetime, json, webbrowser, pathlib
-# ctypes, winreg, subprocess, glob, re, tkinter.ttk, tkinter.messagebox
-# tkinter.scrolledtext, tkinter.filedialog
+# Windows API
+pywin32>=306
 
 # Note: Ce script est optimisé pour Windows
 # Assurez-vous d'avoir Python 3.8+ installé

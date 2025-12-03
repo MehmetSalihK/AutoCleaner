@@ -1,342 +1,282 @@
-# 🛡️ AutoCleaner Pro v3.0 - Maintenance Système Intelligente
+# 🛡️ AutoCleaner Pro v5.2 - Professional Edition
 
-**AutoCleaner Pro** est une application Windows de nouvelle génération qui révolutionne la maintenance système avec une interface moderne, un nettoyage intelligent et des fonctionnalités avancées. Profitez d'un dashboard interactif, de thèmes adaptatifs et d'une configuration personnalisable pour une expérience utilisateur optimale.
+[![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-blue?logo=windows)](https://www.microsoft.com/windows)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-green?logo=python)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
-[![Windows](https://img.shields.io/badge/Windows-10%2F11-blue?logo=windows)](https://www.microsoft.com/windows)
-[![Python](https://img.shields.io/badge/Python-3.8%2B-green?logo=python)](https://www.python.org)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Active-success)](https://github.com)
-
----
-
-## 📚 Table des matières
-
-* [🎯 Objectifs](#-objectifs)
-* [✨ Fonctionnalités](#-fonctionnalités)
-* [🛡️ Sécurité et Protection](#️-sécurité-et-protection)
-* [🛠️ Installation](#️-installation)
-* [📋 Requirements](#-requirements)
-* [🚀 Utilisation](#-utilisation)
-* [⚙️ Configuration](#️-configuration)
-* [📊 Monitoring](#-monitoring)
-* [🔧 Dépannage](#-dépannage)
-* [🎁 Bonus](#-bonus)
-* [🤝 Contribuer](#-contribuer)
-* [📄 Licence](#-licence)
-
----
-
-## 🎯 Objectifs
-
-AutoCleaner révolutionne la maintenance PC en automatisant intelligemment les tâches de nettoyage pour :
-
-* ⚡ **Performance** : Libération d'espace disque et optimisation système
-* 🛡️ **Sécurité** : Protection des données importantes (navigateurs, profils)
-* 🥷 **Discrétion** : Fonctionnement invisible sans interruption
-* 🔄 **Automatisation** : Maintenance continue sans intervention
+**AutoCleaner Pro** est un outil de nettoyage système professionnel pour Windows 10/11, conçu pour optimiser les performances de votre PC en supprimant les fichiers temporaires, caches et données inutiles de manière intelligente et sécurisée.
 
 ---
 
 ## ✨ Fonctionnalités Principales
 
-### 🎨 **Interface Moderne v3.0**
-* 🖥️ **Dashboard interactif** avec statistiques en temps réel
-* 🌙 **Thème adaptatif** (clair/sombre) selon les préférences système
-* 📊 **Barres de progression** et indicateurs visuels avancés
-* 🎯 **Interface responsive** optimisée pour tous les écrans
-* ⚙️ **Panneau de configuration** intégré et intuitif
+### 🧹 Nettoyage Intelligent
+- **Système Windows**
+  - Fichiers temporaires (%TEMP%, C:\Windows\Temp)
+  - Cache Windows et Prefetch
+  - Logs système et crash dumps (.dmp)
+  - SoftwareDistribution\Download
+  
+- **Navigateurs Web**
+  - Chrome, Edge, Brave
+  - Opera, Opera GX, Vivaldi
+  - Yandex et autres navigateurs Chromium
+  - **Protection** : Préserve mots de passe et favoris
 
-### 🧹 **Nettoyage Intelligent Avancé**
-* ✅ Nettoyage automatique programmable (1-60 minutes)
-* ✅ **Mode nettoyage en profondeur** avec options étendues
-* ✅ Suppression sélective des fichiers temporaires système
-* ✅ Nettoyage sécurisé du cache navigateur (Chrome, Firefox, Edge)
-* ✅ Optimisation du cache DNS et réseau
-* ✅ **Exclusions intelligentes** pour protéger les données importantes
+- **Plateformes Gaming**
+  - Steam (cache, htmlcache, logs, dumps)
+  - Epic Games Launcher
+  - Riot Games (League of Legends, Valorant)
+  - Discord cache
+  - NVIDIA et AMD caches GPU
 
-### 🛡️ **Sécurité et Protection Renforcées**
-* 🔒 **Protection des données utilisateur** : Historique, cookies, mots de passe préservés
-* 🛡️ **Exclusions automatiques** des fichiers système critiques
-* ⚠️ **Validation des chemins** avant suppression
-* 📋 **Historique des actions** avec possibilité de traçabilité
-* 🔐 **Exécution sécurisée** avec droits administrateur contrôlés
+- **Applications**
+  - Spotify, Adobe, Microsoft Teams
+  - Caches et fichiers temporaires
 
-### 📊 **Monitoring et Statistiques**
-* 📈 **Informations système** en temps réel (CPU, RAM, disque)
-* 📊 **Statistiques de nettoyage** détaillées et historiques
-* 🎯 **Indicateurs de performance** avec alertes intelligentes
-* 📅 **Historique des 50 derniers nettoyages**
-* 💾 **Suivi de l'espace libéré** avec graphiques
+### 📊 Surveillance Système en Temps Réel
+- **Métriques CPU, RAM, Disque, GPU**
+- Graphiques de progression colorés
+- Statistiques réseau (Download/Upload)
+- Mise à jour automatique toutes les 2 secondes
 
-### ⚙️ **Configuration Avancée**
-* 🎛️ **Paramètres personnalisables** via interface graphique
-* 🔔 **Notifications configurables** (activation/désactivation)
-* 🚀 **Démarrage automatique** optionnel avec Windows
-* 💾 **Sauvegarde/restauration** des paramètres
-* 🌐 **Support multilingue** (français par défaut)
-* 📁 **Applications** : Protection des profils Chrome, Firefox, Edge
-* 🎮 **Gaming** : Sauvegarde des données Steam, Epic Games, Discord
-* 💼 **Productivité** : Conservation des paramètres Office, Adobe, Teams
+### ⏱️ Nettoyage Automatique Programmable
+- Intervalles configurables : **5, 10, 15, 30, 45 minutes** ou **1, 2, 3 heures**
+- Notifications Windows après chaque nettoyage
+- Exécution en arrière-plan silencieuse
+- Statistiques détaillées (fichiers supprimés, espace libéré)
 
-### 🥷 **Mode Furtif**
-* 👻 Démarrage silencieux sans fenêtre console
-* 🔕 Notifications discrètes et courtes
-* ⏰ Nettoyage automatique toutes les 10 minutes
-* 🚀 Lancement automatique au démarrage Windows
+### 🔔 Notifications Natives Windows
+- Intégration complète avec le Centre de notifications Windows
+- Notifications après nettoyage automatique
+- Alertes de minimisation dans la barre des tâches
+- Bouton de test dans les paramètres
 
-### 📊 **Interface Intuitive**
-* 🖱️ Icône système avec menu contextuel
-* 📈 Statistiques en temps réel
-* 🧹 Nettoyage manuel à la demande
-* ⚙️ Configuration simple
+### 📜 Historique et Logs Détaillés
+- Enregistrement de chaque fichier supprimé
+- Informations : chemin, taille, catégorie, timestamp
+- Export CSV pour analyse
+- Affichage des 100 dernières actions
 
----
+### 🎨 Interface Moderne et Professionnelle
+- Design Fluent inspiré de Windows 11
+- Mode sombre/clair
+- Cartes avec effets de profondeur
+- Animations fluides
+- Responsive (1200x800 minimum)
 
-## 🛡️ Sécurité et Protection
+### 🔒 Sécurité et Protection
+- **Mode Simulation** : Prévisualisation avant suppression
+- Protection des données de connexion (Steam, navigateurs)
+- Liste noire de fichiers critiques
+- Logs détaillés de toutes les opérations
+- Instance unique (pas de doublons)
 
-### **Données Préservées**
-```
-🌐 Navigateurs Web
-├── Chrome : Historique, cookies, mots de passe, favoris
-├── Firefox : Profils utilisateur complets
-└── Edge : Sessions et données de connexion
-
-💻 Applications Système
-├── Windows Explorer : Historique de navigation
-├── PowerShell : Historique des commandes
-└── Logs critiques : System, Security
-
-🎯 Applications Tierces
-├── Gaming : Steam, Epic Games, Discord, Spotify
-├── Bureau : Office, Adobe, Teams, Skype
-└── Développement : Git, IDE, configurations
-```
-
-### **Sécurité Renforcée**
-* ⏱️ **Timeout** sur les commandes système (évite les blocages)
-* 🔍 **Vérification** de l'âge et taille des fichiers
-* 🚫 **Exclusion** des fichiers système critiques (.dll, .exe, .sys)
-* 📝 **Logs** des erreurs pour diagnostic
+### 🔧 Paramètres Avancés
+- Minimiser dans la barre des tâches (System Tray)
+- Démarrage automatique avec Windows
+- Mode Furtif (démarrage minimisé)
+- Personnalisation des intervalles de nettoyage
+- Activation/désactivation des notifications
 
 ---
 
-## 🛠️ Installation
+## 📥 Installation
 
-### **Pré-requis**
-* ![Windows](https://img.shields.io/badge/-Windows%2010%2F11-blue?style=flat&logo=windows) 
-* ![Python](https://img.shields.io/badge/-Python%203.8%2B-green?style=flat&logo=python)
-* 🔑 Droits administrateur (premier lancement uniquement)
+### Option 1 : Exécutable Portable (Recommandé)
+1. Téléchargez `AutoCleanerPro_v5.2_Final.exe` depuis le dossier `dist/`
+2. Double-cliquez pour lancer (droits administrateur recommandés)
+3. Aucune installation requise !
 
-### **Installation Rapide**
-
+### Option 2 : Depuis le Code Source
 ```bash
-# 1. Cloner le projet
-git clone https://github.com/votre-nom/AutoCleaner.git
+# Cloner le repository
+git clone https://github.com/MehmetSalihK/AutoCleaner.git
 cd AutoCleaner
 
-# 2. Installer les dépendances
+# Installer les dépendances
 pip install -r requirements.txt
 
-# 3. Lancer le programme
-python autocleaner.py
+# Lancer l'application
+python main.py
 ```
 
-### **Création d'un Exécutable**
-
-```bash
-# Installation de PyInstaller
-pip install pyinstaller
-
-# Génération de l'exécutable (recommandé)
-pyinstaller --onefile --noconsole --name="AutoCleaner" autocleaner.py
-
-# L'exécutable sera dans le dossier dist/
-```
-
----
-
-## 📋 Requirements
-
-### **requirements.txt**
-```txt
-win10toast-persist>=0.9.4
-pystray>=0.19.4
-Pillow>=9.0.0
-pywin32>=305
-psutil>=5.9.0
-```
-
-### **Dépendances Détaillées**
-
-| Package | Version | Usage |
-|---------|---------|--------|
-| `win10toast-persist` | ≥0.9.4 | Notifications Windows persistantes |
-| `pystray` | ≥0.19.4 | Icône système et menu contextuel |
-| `Pillow` | ≥9.0.0 | Génération d'icônes dynamiques |
-| `pywin32` | ≥305 | API Windows (registre, raccourcis) |
-| `psutil` | ≥5.9.0 | Gestion des processus système |
+### Dépendances
+- Python 3.8+
+- customtkinter >= 5.2.0
+- psutil >= 5.9.0
+- pystray >= 0.19.4
+- Pillow >= 9.0.0
+- pywin32 >= 306
+- winotify >= 1.1.0
 
 ---
 
 ## 🚀 Utilisation
 
-### **Démarrage**
+### Démarrage Rapide
+1. **Lancez l'application** (droits admin recommandés pour un nettoyage complet)
+2. **Tableau de Bord** : Visualisez l'état de votre système
+3. **Actions Rapides** :
+   - 🧹 **Nettoyer Maintenant** : Nettoyage immédiat
+   - 🔍 **Analyser (Simulation)** : Prévisualisation sans suppression
+
+### Configuration du Nettoyage Automatique
+1. Allez dans **⚙️ Paramètres**
+2. Choisissez votre **Intervalle de Nettoyage** (5 min à 3 heures)
+3. Activez **Notifications** pour recevoir des alertes
+4. Testez avec le bouton **📢 Envoyer une Notification de Test**
+
+### Minimiser dans la Barre des Tâches
+1. Activez **Minimiser dans la Tray** dans les Paramètres
+2. Fermez la fenêtre → L'app continue en arrière-plan
+3. Cliquez sur l'icône près de l'horloge pour rouvrir
+4. Clic droit → **Quitter** pour fermer complètement
+
+### Consulter l'Historique
+1. Allez dans **📜 Historique**
+2. Visualisez les 100 dernières suppressions
+3. Cliquez sur **💾 Exporter CSV** pour sauvegarder sur le bureau
+
+---
+
+## 🎯 Fonctionnalités Avancées
+
+### Mode Simulation (Sécurité)
+Activez le **Mode Simulation** dans les Paramètres pour :
+- Voir ce qui serait supprimé SANS rien toucher
+- Tester les règles de nettoyage
+- Vérifier l'espace qui serait libéré
+
+### Nettoyage Personnalisé
+Dans **🧹 Nettoyage Avancé** :
+- Cochez/décochez les catégories à nettoyer
+- Système, Navigateurs, Gaming, Applications
+- Chaque catégorie est détaillée
+
+### Protection des Données
+Par défaut, AutoCleaner Pro **NE SUPPRIME PAS** :
+- Mots de passe enregistrés
+- Favoris/Marque-pages
+- Sessions de connexion (Steam, Epic, etc.)
+- Fichiers système critiques (.sys, .dll)
+
+---
+
+## 📊 Statistiques et Performances
+
+### Ce que vous gagnez
+- **Espace disque** : Jusqu'à plusieurs Go libérés
+- **Performance** : Démarrage plus rapide
+- **Stabilité** : Moins de crashs liés aux caches corrompus
+- **Vie privée** : Suppression des traces de navigation
+
+### Exemples de Nettoyage
+```
+✅ Nettoyage réussi !
+📁 Fichiers supprimés : 1,247
+💾 Espace libéré : 3.42 GB
+⚠️ Erreurs : 0
+```
+
+---
+
+## 🛠️ Build depuis le Source
+
+### Créer un Exécutable
 ```bash
-# Lancement normal
-python autocleaner.py
+# Installer PyInstaller
+pip install pyinstaller
 
-# Ou avec l'exécutable
-AutoCleaner.exe
-```
+# Build
+python -m PyInstaller --noconsole --onefile \
+  --name="AutoCleanerPro_v5.2_Final" \
+  --icon="AutoCleanerLogo.ico" \
+  --add-data "AutoCleanerLogo.ico;." \
+  --add-data "AutoCleanerLogo.png;." \
+  --collect-all customtkinter \
+  --collect-all winotify \
+  main.py
 
-> ⚠️ **Note** : Le programme demande automatiquement les droits administrateur si nécessaire
-
-### **Interface Utilisateur**
-
-#### **Icône Système** 🖱️
-* **Clic gauche** : Afficher les statistiques
-* **Clic droit** : Menu contextuel
-
-#### **Menu Contextuel**
-| Option | Action |
-|--------|--------|
-| 📊 Statistiques | Affiche le nombre de fichiers nettoyés |
-| 🧹 Nettoyer maintenant | Lance un nettoyage manuel |
-| ❌ Quitter | Ferme l'application |
-
----
-
-## ⚙️ Configuration
-
-### **Personnalisation du Nettoyage**
-
-Modifiez la liste `EXCLUDED_PATHS` dans le code pour ajouter vos exclusions :
-
-```python
-EXCLUDED_PATHS = [
-    # Ajouter vos dossiers à protéger
-    "MonApplication\\ImportantData",
-    "MesDocuments\\Projet"
-]
-```
-
-### **Fréquence de Nettoyage**
-
-```python
-# Dans schedule_cleanup()
-time.sleep(600)  # 600 = 10 minutes
-                 # 300 = 5 minutes
-                 # 1800 = 30 minutes
+# L'exécutable sera dans dist/
 ```
 
 ---
 
-## 📊 Monitoring
+## 🐛 Résolution de Problèmes
 
-### **Statistiques Disponibles**
-* 📁 **Fichiers supprimés** : Compteur total
-* ❌ **Erreurs rencontrées** : Nombre d'échecs
-* ⏰ **Dernière exécution** : Timestamp du dernier nettoyage
-* 🛡️ **Mode protection** : Status des exclusions
+### L'application ne démarre pas
+1. **Vérifiez les logs** : `%USERPROFILE%\autocleaner_v4.log`
+2. **Lancez en admin** : Clic droit → Exécuter en tant qu'administrateur
+3. **Vérifiez Python** : Version 3.8+ requise
 
-### **Logs et Diagnostic**
-Les erreurs sont comptabilisées et affichées dans l'interface statistiques pour un suivi optimal.
+### Les notifications ne s'affichent pas
+1. Vérifiez que **winotify** est installé : `pip install winotify`
+2. Testez avec le bouton dans les Paramètres
+3. Vérifiez le Centre de notifications Windows (coin bas-droit)
 
----
+### Le Gestionnaire des tâches se ferme
+- Utilisez la version **v5.1 Stable** ou supérieure
+- Protection anti-crash intégrée
 
-## 🔧 Dépannage
-
-### **Problèmes Courants**
-
-| Problème | Solution |
-|----------|----------|
-| ❌ Pas de droits admin | Clic droit → "Exécuter en tant qu'administrateur" |
-| 🚫 Notifications non affichées | Vérifier les paramètres de notification Windows |
-| ⏸️ Programme ne démarre pas | Vérifier l'installation de Python et des dépendances |
-| 🔄 Pas de nettoyage auto | Relancer le programme avec droits admin |
-
-### **Désinstallation**
-```bash
-# Supprimer du démarrage automatique
-# Via les paramètres Windows → Applications → Démarrage
-# Ou supprimer la clé registre HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\AutoCleaner
-```
+### L'icône tray ne s'affiche pas
+- Vérifiez que **pystray** est installé
+- L'icône peut prendre 1-2 secondes à apparaître
 
 ---
 
-## 🎁 Bonus
+## 📝 Changelog
 
-### **Fonctionnalités Avancées**
-* 🧵 **Multithreading** : Interface réactive, nettoyage en arrière-plan
-* 🔄 **Auto-démarrage** : Ajout automatique au démarrage Windows
-* 🎨 **Icône dynamique** : Génération automatique si logo absent
-* 💾 **Sauvegarde** : Conservation des données critiques utilisateur
-* 🔒 **Mode discret** : Aucune interruption de votre travail
-
-### **Intégration Système**
-* ✅ Compatible Windows 10/11
-* ✅ Fonctionne sur architectures x64/x86
-* ✅ Respect des permissions système
-* ✅ Gestion intelligente des erreurs
+### v5.2 Final (Décembre 2024)
+- ✅ Notifications natives Windows (winotify)
+- ✅ Bouton de test de notification
+- ✅ Meilleure gestion d'erreur
+- ✅ README amélioré
 
 ---
 
-## 🤝 Contribuer
+## 🤝 Contribution
 
-Votre contribution est la bienvenue ! 
-
-### **Comment Participer**
-1. 🍴 **Fork** le projet
-2. 🌿 **Branche** : `git checkout -b feature/nouvelle-fonctionnalite`
-3. ✏️ **Commit** : `git commit -m "Ajout: nouvelle fonctionnalité"`
-4. 📤 **Push** : `git push origin feature/nouvelle-fonctionnalite`
-5. 🔄 **Pull Request** avec description détaillée
-
-### **Guidelines**
-* 📝 Code commenté et documenté
-* 🧪 Tests sur Windows 10/11
-* 🛡️ Respect des exclusions de sécurité
-* 📚 Mise à jour de la documentation
+Les contributions sont les bienvenues ! Pour contribuer :
+1. Fork le projet
+2. Créez une branche (`git checkout -b feature/AmazingFeature`)
+3. Commit vos changements (`git commit -m 'Add AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrez une Pull Request
 
 ---
 
-## 📄 Licence
+## 📄 License
 
-```
-MIT License
-
-Copyright (c) 2025 AutoCleaner
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-```
-
-**Voir le fichier [LICENSE](LICENSE) pour les détails complets.**
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
 ---
 
-## 🔗 Liens Utiles
+## 👨‍💻 Auteur
 
-* 📖 [Documentation Complète](https://github.com/votre-nom/AutoCleaner/wiki)
-* 🐛 [Signaler un Bug](https://github.com/votre-nom/AutoCleaner/issues)
-* 💡 [Demander une Fonctionnalité](https://github.com/votre-nom/AutoCleaner/issues/new)
-* 📧 [Contact](mailto:votre-email@domain.com)
+**Mehmet Salih K**
+- GitHub: [@MehmetSalihK](https://github.com/MehmetSalihK)
+
+---
+
+## ⚠️ Avertissement
+
+- **Utilisez à vos propres risques**
+- Toujours faire une **sauvegarde** avant un nettoyage important
+- Le **Mode Simulation** est recommandé pour les premiers usages
+- Certaines fonctionnalités nécessitent des **droits administrateur**
+
+---
+
+## 🌟 Remerciements
+
+Merci à tous les contributeurs et utilisateurs d'AutoCleaner Pro !
+
+**Aimez-vous AutoCleaner Pro ? Donnez-lui une ⭐ sur GitHub !**
 
 ---
 
 <div align="center">
-
-**🛡️ Développé avec ❤️ pour maintenir votre PC performant et sécurisé**
-
-![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)
-![Made with Python](https://img.shields.io/badge/Made%20with-Python-blue.svg)
-![Windows](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)
-
+  <strong>AutoCleaner Pro v5.2 - Professional Edition</strong><br>
+  <em>Optimisez votre PC Windows en toute sécurité</em>
 </div>
