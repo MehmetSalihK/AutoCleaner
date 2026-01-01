@@ -152,6 +152,17 @@ class Cleaner:
             ]
         }
 
+        # Discord Fix & Add Battle.net
+        paths["Discord"] = [
+            r"%APPDATA%\discord\Cache\*",
+            r"%APPDATA%\discord\Code Cache\*",
+            r"%APPDATA%\discord\GPUCache\*"
+        ]
+        paths["Battle.net"] = [
+            r"%LOCALAPPDATA%\Battle.net\Cache\*",
+            r"%LOCALAPPDATA%\Battle.net\Logs\*"
+        ]
+
         for name, path_list in paths.items():
             for path in path_list:
                 full_path = os.path.expandvars(path)
@@ -193,11 +204,73 @@ class Cleaner:
             "Adobe": r"%LOCALAPPDATA%\Adobe\Common\Media Cache Files\*",
             "Teams": r"%APPDATA%\Microsoft\Teams\Cache\*"
         }
-
+        
+        # New Social Apps
+        apps["Slack"] = r"%APPDATA%\Slack\Cache\*" # Will also catch Code Cache via glob if we used **
+        # For Slack we need multiple paths so we handle separately or use wildcards more aggressively
+        # Let's add specific entries for better control
+        additional_apps = {
+            "Slack": [
+                r"%APPDATA%\Slack\Cache\*",
+                r"%APPDATA%\Slack\Code Cache\*", 
+                r"%APPDATA%\Slack\GPUCache\*"
+            ],
+            "Telegram": [
+                r"%APPDATA%\Telegram Desktop\tdata\temp\*" # Safe temp only
+            ]
+        }
+        
+        # Standard single-path apps
         for name, path in apps.items():
             full_path = os.path.expandvars(path)
             base_dir = os.path.dirname(full_path.split("*")[0])
             self.clean_directory(base_dir, ["*"], f"App ({name})")
+
+        # Multi-path apps
+        for name, paths in additional_apps.items():
+            for path in paths:
+                full_path = os.path.expandvars(path)
+                base_dir = os.path.dirname(full_path.split("*")[0])
+                if os.path.exists(base_dir):
+                    self.clean_directory(base_dir, ["*"], f"App ({name})")
+
+    def clean_dev(self):
+        """Clean developer tool caches."""
+        if not self.config.get("categories", {}).get("dev", True):
+            return
+
+        # VS Code
+        vscode_paths = [
+            r"%APPDATA%\Code\Cache\*",
+            r"%APPDATA%\Code\CachedData\*",
+            r"%APPDATA%\Code\Code Cache\*",
+            r"%APPDATA%\Code\GPUCache\*"
+        ]
+        
+        for path in vscode_paths:
+            full = os.path.expandvars(path)
+            base = os.path.dirname(full.split("*")[0])
+            self.clean_directory(base, ["*"], "Dev (VS Code)")
+
+        # JetBrains (PyCharm, IntelliJ, Android Studio)
+        # Using glob to find versions
+        jetbrains_locations = [
+            r"%LOCALAPPDATA%\JetBrains\PyCharm*\caches",
+            r"%LOCALAPPDATA%\JetBrains\IntelliJ*\caches",
+            r"%LOCALAPPDATA%\Google\AndroidStudio*\caches"
+        ]
+
+        for location in jetbrains_locations:
+            expanded_loc = os.path.expandvars(location)
+            # Find directories matching the pattern (e.g. PyCharm2023.1)
+            # Note: clean_directory expects a base path, but here the base path *is* the variable part.
+            # We need to list directories first.
+            parent = os.path.dirname(expanded_loc)
+            if os.path.exists(parent):
+                pattern = os.path.basename(expanded_loc)
+                for folder in glob.glob(os.path.join(parent, pattern)):
+                    if os.path.isdir(folder):
+                        self.clean_directory(folder, ["*"], f"Dev ({os.path.basename(os.path.dirname(folder))})")
 
     def perform_cleanup(self, simulation=False):
         """Execute cleanup routine."""
@@ -214,7 +287,9 @@ class Cleaner:
         self.clean_system()
         self.clean_browsers()
         self.clean_gaming()
+        self.clean_gaming()
         self.clean_apps()
+        self.clean_dev()
         
         # DNS Flush (Real only)
         if not self.simulation_mode:

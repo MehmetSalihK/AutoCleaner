@@ -3,8 +3,11 @@ import json
 from pathlib import Path
 
 # Constants
-APP_NAME = "AutoCleaner Pro"
-VERSION = "4.0"
+APP_NAME = "AutoCleaner Demo"
+VERSION = "1.0"
+CONTACT_EMAIL = "support@autocleaner.com"
+# Remplacez ceci par votre URL de Webhook (Discord ou Formspree)
+FEEDBACK_WEBHOOK_URL = "https://discord.com/api/webhooks/1456157510678351988/Ax-isQ4rXRv6F70eq7G_caYhmgaD1GP0AFjnen-kXUfW6oJgxM3S_hQBfVnK-ppWXSW8" 
 CONFIG_FILE = os.path.join(os.path.expanduser("~"), ".autocleaner_config_v4.json")
 
 # Default Configuration v4.0
@@ -28,7 +31,8 @@ DEFAULT_CONFIG = {
         "system": True,
         "browsers": True,
         "gaming": False,
-        "apps": True
+        "apps": True,
+        "dev": True
     },
     "exclusions": [
         # Critical System

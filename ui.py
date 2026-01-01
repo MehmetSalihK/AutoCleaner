@@ -1,3 +1,4 @@
+import webbrowser
 import customtkinter as ctk
 import threading
 import time
@@ -8,8 +9,9 @@ from pystray import MenuItem as item
 from config import load_config, save_config, APP_NAME, VERSION
 from utils import load_logo, format_file_size
 from monitor import get_system_info
-from ui_components import StatCard, ToggleCard, ModernButton
+from ui_components import StatCard, ToggleCard, ModernButton, FeedbackDialog
 from logs import logger
+from tools import ProcessManager, StartupManager, AppManager, SystemInfo, SystemOptimizer, DiskAnalyzer
 
 ctk.set_default_color_theme("blue")
 
@@ -54,6 +56,10 @@ class ModernApp(ctk.CTk):
             logger.error(f"Failed to create UI: {e}")
             raise
 
+    def open_feedback(self):
+        """Open feedback dialog."""
+        FeedbackDialog(self)
+
     def set_theme(self, theme_mode):
         if theme_mode.lower() == "system":
             ctk.set_appearance_mode("System")
@@ -63,6 +69,7 @@ class ModernApp(ctk.CTk):
             ctk.set_appearance_mode("Dark")
 
     def create_sidebar(self):
+        print("Creating sidebar...")
         # Modern Sidebar with Gradient Effect
         self.sidebar = ctk.CTkFrame(self, width=260, corner_radius=0, fg_color=("#e8eef5", "#1a1a2e"))
         self.sidebar.grid(row=0, column=0, sticky="nsew")
@@ -70,13 +77,25 @@ class ModernApp(ctk.CTk):
 
         # Logo Section
         logo_frame = ctk.CTkFrame(self.sidebar, fg_color="transparent")
-        logo_frame.grid(row=0, column=0, padx=20, pady=(30, 20), sticky="ew")
+        logo_frame.grid(row=0, column=0, padx=20, pady=(40, 20), sticky="ew")
         
-        ctk.CTkLabel(
-            logo_frame, 
-            text="🛡️", 
-            font=("Segoe UI", 48)
-        ).pack()
+        try:
+            # Load Logo Image
+            img = Image.open("AutoCleanerLogo.ico")
+            logo_img = ctk.CTkImage(light_image=img, dark_image=img, size=(80, 80))
+            
+            ctk.CTkLabel(
+                logo_frame, 
+                text="", 
+                image=logo_img
+            ).pack(pady=(0, 10))
+        except:
+            # Fallback
+            ctk.CTkLabel(
+                logo_frame, 
+                text="🛡️", 
+                font=("Segoe UI", 60)
+            ).pack(pady=(0, 10))
         
         ctk.CTkLabel(
             logo_frame, 
@@ -97,6 +116,7 @@ class ModernApp(ctk.CTk):
         nav_items = [
             ("dashboard", "📊", "Tableau de Bord"),
             ("cleaner", "🧹", "Nettoyage"),
+            ("tools", "🛠️", "Outils"),
             ("logs", "📜", "Historique"),
             ("settings", "⚙️", "Paramètres")
         ]
@@ -111,11 +131,30 @@ class ModernApp(ctk.CTk):
                 text_color=("gray10", "gray90"),
                 hover_color=("#d0d9e5", "#2a2a3e"),
                 anchor="w",
-                font=("Segoe UI", 15, "bold"),
+
+                font=("Segoe UI", 16, "bold"),
                 command=lambda k=key: self.show_view(k)
             )
             btn.grid(row=i+1, column=0, padx=15, pady=8, sticky="ew")
             self.nav_buttons[key] = btn
+
+            self.nav_buttons[key] = btn
+            
+        # Feedback Button (CTA)
+        ctk.CTkButton(
+            self.sidebar,
+            text="✉️  Donner votre Avis",
+            height=45,
+            corner_radius=22,
+            fg_color=("#e0e0e0", "#252535"),
+            text_color=("#333", "#fff"),
+            border_width=1,
+            border_color=("#ccc", "#3a3a4e"),
+            hover_color=("#d0d9e5", "#303045"),
+            anchor="center",
+            font=("Segoe UI", 13, "bold"),
+            command=self.open_feedback
+        ).grid(row=6, column=0, padx=25, pady=(30, 0), sticky="ew")
 
         # Version Footer
         version_frame = ctk.CTkFrame(self.sidebar, fg_color="transparent")
@@ -128,6 +167,7 @@ class ModernApp(ctk.CTk):
         ).pack()
 
     def create_content_area(self):
+        print("Creating content area...")
         # Content Area with Modern Background
         self.content = ctk.CTkFrame(
             self, 
@@ -142,6 +182,7 @@ class ModernApp(ctk.CTk):
         self.views = {
             "dashboard": DashboardView(self.content, self.cleaner),
             "cleaner": CleanerView(self.content, self.cleaner),
+            "tools": ToolsView(self.content),
             "logs": LogsView(self.content),
             "settings": SettingsView(self.content, self.config, self.save_config)
         }
@@ -180,7 +221,7 @@ class ModernApp(ctk.CTk):
             self.withdraw()
             from utils import show_notification
             show_notification(
-                "AutoCleaner Pro",
+                "AutoCleaner Demo",
                 "L'application continue en arrière-plan. Cliquez sur l'icône dans la barre des tâches pour l'ouvrir.",
                 duration=3
             )
@@ -199,7 +240,7 @@ class DashboardView(ctk.CTkFrame):
         ctk.CTkLabel(
             header, 
             text="Tableau de Bord", 
-            font=("Segoe UI", 36, "bold"),
+            font=("Segoe UI", 42, "bold"),
             text_color=("#1a1a2e", "#ffffff")
         ).pack(side="left")
         
@@ -262,10 +303,18 @@ class DashboardView(ctk.CTkFrame):
         
         ModernButton(
             action_card, 
+            "🚀 Optimiser RAM", 
+            self.optimize_ram,
+            "primary"
+        ).pack(fill="x", padx=25, pady=(12, 0))
+
+        self.clean_btn = ModernButton(
+            action_card, 
             "🧹 Nettoyer Maintenant", 
             self.start_cleanup,
             "primary"
-        ).pack(fill="x", padx=25, pady=12)
+        )
+        self.clean_btn.pack(fill="x", padx=25, pady=12)
         
         ModernButton(
             action_card, 
@@ -286,11 +335,27 @@ class DashboardView(ctk.CTkFrame):
         except Exception as e:
             logger.error(f"Failed to update stats: {e}")
 
+    def optimize_ram(self):
+        from tkinter import messagebox
+        success, msg = SystemOptimizer.optimize_ram()
+        if success:
+            messagebox.showinfo("Optimisation", msg)
+            self.update_stats() # Immediate refresh
+        else:
+            messagebox.showerror("Erreur", msg)
+
     def start_cleanup(self):
         def cleanup_with_feedback():
             from tkinter import messagebox
             try:
+                # Update UI to loading state
+                self.clean_btn.configure(state="disabled", text="⏳ Nettoyage en cours...")
+                
                 result = self.cleaner.perform_cleanup(simulation=False)
+                
+                # Restore UI
+                self.clean_btn.configure(state="normal", text="🧹 Nettoyer Maintenant")
+                
                 messagebox.showinfo(
                     "Nettoyage Terminé",
                     f"✅ Nettoyage réussi !\n\n"
@@ -299,6 +364,7 @@ class DashboardView(ctk.CTkFrame):
                     f"⚠️ Erreurs : {result['errors']}"
                 )
             except Exception as e:
+                self.clean_btn.configure(state="normal", text="🧹 Nettoyer Maintenant")
                 messagebox.showerror("Erreur", f"Erreur lors du nettoyage :\n{str(e)}")
         
         threading.Thread(target=cleanup_with_feedback, daemon=True).start()
@@ -364,7 +430,14 @@ class CleanerView(ctk.CTkFrame):
             ("Applications", [
                 "Cache Spotify",
                 "Cache Adobe",
-                "Cache Microsoft Teams"
+                "Cache Microsoft Teams",
+                "Cache Slack",
+                "Cache Telegram"
+            ]),
+            ("Développement", [
+                "Cache VS Code",
+                "Cache JetBrains (PyCharm...)",
+                "Cache Android Studio"
             ])
         ]
         
@@ -388,6 +461,281 @@ class CleanerView(ctk.CTkFrame):
                 )
                 switch.select()
                 switch.pack(anchor="w", pady=8, padx=25)
+
+class ToolsView(ctk.CTkFrame):
+    def __init__(self, parent):
+        super().__init__(parent, fg_color="transparent")
+        
+        ctk.CTkLabel(
+            self, 
+            text="🛠️ Gestion du Système", 
+            font=("Segoe UI", 36, "bold")
+        ).pack(anchor="w", pady=(0, 20))
+        
+        # Tabs for Tools
+        self.tabview = ctk.CTkTabview(self, corner_radius=15, fg_color=("white", "#1a1a2e"))
+        self.tabview.pack(fill="both", expand=True)
+        
+        self.tabview.add("Processus")
+        self.tabview.add("Démarrage")
+        self.tabview.add("Applications")
+        self.tabview.add("Système")
+        self.tabview.add("Disque")
+        
+        self.setup_process_tab()
+        self.setup_startup_tab()
+        self.setup_apps_tab()
+        self.setup_system_tab()
+        self.setup_disk_tab()
+
+    def setup_process_tab(self):
+        tab = self.tabview.tab("Processus")
+        
+        # Simple Header
+        header = ctk.CTkFrame(tab, fg_color="transparent")
+        header.pack(fill="x", pady=10)
+        
+        ModernButton(header, "🔄 Actualiser", self.refresh_processes, "secondary").pack(side="left")
+        
+        # Process List (Scrollable)
+        self.proc_scroll = ctk.CTkScrollableFrame(tab, fg_color="transparent")
+        self.proc_scroll.pack(fill="both", expand=True, pady=10)
+        
+        self.refresh_processes()
+
+    def refresh_processes(self):
+        for widget in self.proc_scroll.winfo_children():
+            widget.destroy()
+            
+        procs = ProcessManager.get_processes(limit=20, sort_by='memory')
+        
+        # Headers
+        headers = ctk.CTkFrame(self.proc_scroll, fg_color="transparent")
+        headers.pack(fill="x")
+        ctk.CTkLabel(headers, text="Nom", width=200, anchor="w", font=("Segoe UI", 12, "bold")).pack(side="left", padx=5)
+        ctk.CTkLabel(headers, text="PID", width=80, anchor="w", font=("Segoe UI", 12, "bold")).pack(side="left", padx=5)
+        ctk.CTkLabel(headers, text="RAM (MB)", width=100, anchor="w", font=("Segoe UI", 12, "bold")).pack(side="left", padx=5)
+        
+        for p in procs:
+            row = ctk.CTkFrame(self.proc_scroll, fg_color=("gray90", "#2b2b40"))
+            row.pack(fill="x", pady=2)
+            
+            ctk.CTkLabel(row, text=p['name'], width=200, anchor="w").pack(side="left", padx=5)
+            ctk.CTkLabel(row, text=str(p['pid']), width=80, anchor="w").pack(side="left", padx=5)
+            ctk.CTkLabel(row, text=f"{p['memory']:.1f}", width=100, anchor="w").pack(side="left", padx=5)
+            
+            ctk.CTkButton(
+                row, 
+                text="❌", 
+                width=30, 
+                fg_color="#ff4444", 
+                hover_color="#cc0000",
+                command=lambda pid=p['pid']: self.kill_proc(pid)
+            ).pack(side="right", padx=5)
+
+    def kill_proc(self, pid):
+        success, msg = ProcessManager.kill_process(pid)
+        from tkinter import messagebox
+        if success:
+            messagebox.showinfo("Succès", msg)
+            self.refresh_processes()
+        else:
+            messagebox.showerror("Erreur", msg)
+
+    def setup_startup_tab(self):
+        tab = self.tabview.tab("Démarrage")
+        
+        ctk.CTkLabel(tab, text="Programmes au démarrage", font=("Segoe UI", 16, "bold")).pack(anchor="w", pady=10)
+        
+        scroll = ctk.CTkScrollableFrame(tab, fg_color="transparent")
+        scroll.pack(fill="both", expand=True)
+        
+        items = StartupManager.get_startup_items()
+        
+        if not items:
+            ctk.CTkLabel(scroll, text="Aucun item de démarrage trouvé.").pack()
+            
+        for item in items:
+            frame = ctk.CTkFrame(scroll, fg_color=("gray90", "#2b2b40"))
+            frame.pack(fill="x", pady=5)
+            
+            ctk.CTkLabel(frame, text=item['name'], font=("Segoe UI", 14, "bold")).pack(anchor="w", padx=10, pady=(5,0))
+            ctk.CTkLabel(frame, text=item['path'], font=("Segoe UI", 10), text_color="gray").pack(anchor="w", padx=10)
+            ctk.CTkLabel(frame, text=item['source'], font=("Segoe UI", 10, "italic")).pack(anchor="w", padx=10, pady=(0,5))
+            
+            ctk.CTkButton(
+                frame,
+                text="🗑️",
+                width=40,
+                fg_color="#ff4444",
+                hover_color="#cc0000",
+                command=lambda i=item: self.delete_startup(i)
+            ).pack(side="right", padx=10, pady=10)
+
+    def delete_startup(self, item):
+        from tkinter import messagebox
+        if messagebox.askyesno("Confirmation", f"Voulez-vous vraiment supprimer cet élément du démarrage ?\n\n{item['name']}"):
+            success, msg = StartupManager.delete_item(item)
+            if success:
+                messagebox.showinfo("Succès", msg)
+                self.setup_startup_tab() # Refresh
+            else:
+                messagebox.showerror("Erreur", msg)
+
+    def setup_apps_tab(self):
+        tab = self.tabview.tab("Applications")
+        
+        header = ctk.CTkFrame(tab, fg_color="transparent")
+        header.pack(fill="x", pady=10)
+        
+        ModernButton(header, "🔄 Actualiser", self.refresh_apps, "secondary").pack(side="left")
+        
+        # Headers
+        headers = ctk.CTkFrame(tab, fg_color="transparent")
+        headers.pack(fill="x", pady=(10,0))
+        ctk.CTkLabel(headers, text="Nom", width=300, anchor="w", font=("Segoe UI", 12, "bold")).pack(side="left", padx=10)
+        ctk.CTkLabel(headers, text="Version", width=100, anchor="w", font=("Segoe UI", 12, "bold")).pack(side="left", padx=10)
+        ctk.CTkLabel(headers, text="Taille", width=80, anchor="w", font=("Segoe UI", 12, "bold")).pack(side="left", padx=10)
+
+        self.apps_scroll = ctk.CTkScrollableFrame(tab, fg_color="transparent")
+        self.apps_scroll.pack(fill="both", expand=True, pady=5)
+        
+        self.refresh_apps()
+
+    def refresh_apps(self):
+        for widget in self.apps_scroll.winfo_children():
+            widget.destroy()
+            
+        apps = AppManager.get_installed_apps()
+        
+        if not apps:
+            ctk.CTkLabel(self.apps_scroll, text="Aucune application trouvée.").pack()
+            
+        for app in apps:
+            row = ctk.CTkFrame(self.apps_scroll, fg_color=("gray90", "#2b2b40"))
+            row.pack(fill="x", pady=2)
+            
+            # Smart truncate for long names
+            name = app['name']
+            if len(name) > 40:
+                name = name[:37] + "..."
+                
+            ctk.CTkLabel(row, text=name, width=300, anchor="w").pack(side="left", padx=10)
+            ctk.CTkLabel(row, text=app['version'], width=100, anchor="w").pack(side="left", padx=10)
+            ctk.CTkLabel(row, text=app['size'], width=80, anchor="w").pack(side="left", padx=10)
+            
+            if app.get('uninstall_string'):
+                ctk.CTkButton(
+                    row, 
+                    text="❌", 
+                    width=30, 
+                    fg_color="transparent", 
+                    text_color="red",
+                    hover_color="#ffebee",
+                    command=lambda a=app: self.uninstall_app(a)
+                ).pack(side="right", padx=10)
+
+    def uninstall_app(self, app):
+        from tkinter import messagebox
+        if messagebox.askyesno("Désinstallation", f"Lancer le désinstallateur pour {app['name']} ?"):
+            success, msg = AppManager.uninstall_app(app)
+            if not success:
+                messagebox.showerror("Erreur", msg)
+
+    def setup_disk_tab(self):
+        tab = self.tabview.tab("Disque")
+        
+        # Controls
+        ctrl = ctk.CTkFrame(tab, fg_color="transparent")
+        ctrl.pack(fill="x", pady=10)
+        
+        ModernButton(ctrl, "🔍 Scanner Gros Fichiers (>100 Mo)", self.scan_disk, "secondary").pack(side="left")
+        
+        self.disk_status = ctk.CTkLabel(ctrl, text="")
+        self.disk_status.pack(side="left", padx=20)
+        
+        # Results
+        self.disk_scroll = ctk.CTkScrollableFrame(tab, fg_color="transparent")
+        self.disk_scroll.pack(fill="both", expand=True)
+
+    def scan_disk(self):
+        self.disk_status.configure(text="Scan en cours...")
+        self.update_idletasks()
+        
+        def run_scan():
+            files = DiskAnalyzer.scan_large_files()
+            self.after(0, lambda: self.show_disk_results(files))
+            
+        threading.Thread(target=run_scan, daemon=True).start()
+        
+    def show_disk_results(self, files):
+        self.disk_status.configure(text=f"Trouvé: {len(files)} fichiers")
+        for w in self.disk_scroll.winfo_children():
+            w.destroy()
+            
+        for f in files:
+            row = ctk.CTkFrame(self.disk_scroll, fg_color=("gray90", "#2b2b40"))
+            row.pack(fill="x", pady=2)
+            
+            ctk.CTkLabel(row, text=f.get('name', '?'), width=300, anchor="w", font=("Segoe UI", 12, "bold")).pack(side="left", padx=10)
+            ctk.CTkLabel(row, text=f.get('size_fmt', '?'), width=100, anchor="w").pack(side="left", padx=10)
+            
+            ctk.CTkButton(
+                row,
+                text="🗑️",
+                width=40,
+                fg_color="#ff4444",
+                hover_color="#cc0000",
+                command=lambda p=f['path']: self.delete_large_file(p)
+            ).pack(side="right", padx=10, pady=5)
+            
+    def delete_large_file(self, path):
+        from tkinter import messagebox
+        import os
+        if messagebox.askyesno("Suppression", f"Supprimer définitivement ce fichier ?\n\n{path}"):
+            try:
+                os.remove(path)
+                messagebox.showinfo("Succès", "Fichier supprimé.")
+                self.scan_disk() # Refresh
+            except Exception as e:
+                messagebox.showerror("Erreur", str(e))
+                
+
+
+    def setup_system_tab(self):
+        tab = self.tabview.tab("Système")
+        
+        info = SystemInfo.get_info()
+        
+        # Grid layout for system info
+        grid = ctk.CTkFrame(tab, fg_color="transparent")
+        grid.pack(fill="both", expand=True, pady=20, padx=20)
+        
+        details = [
+            ("🖥️ Système", info['os']),
+            ("🔢 Version", info['version']),
+            ("🧠 Processeur", info['cpu']),
+            ("⚡ Coeurs", info['cpu_cores']),
+            ("💾 Mémoire RAM", f"{info['ram_total']} (Utilisé: {info['ram_used']})"),
+            ("🎮 Carte Graphique", info['gpu'])
+        ]
+        
+        for i, (label, value) in enumerate(details):
+            card = ctk.CTkFrame(grid, fg_color=("gray90", "#2b2b40"))
+            card.pack(fill="x", pady=8)
+            
+            ctk.CTkLabel(
+                card, 
+                text=label, 
+                font=("Segoe UI", 14, "bold")
+            ).pack(anchor="w", padx=15, pady=(10, 0))
+            
+            ctk.CTkLabel(
+                card, 
+                text=value, 
+                font=("Segoe UI", 12),
+                text_color="gray"
+            ).pack(anchor="w", padx=15, pady=(0, 10))
 
 class LogsView(ctk.CTkFrame):
     def __init__(self, parent):
@@ -557,7 +905,7 @@ class SettingsView(ctk.CTkFrame):
         from tkinter import messagebox
         
         success = show_notification(
-            "AutoCleaner Pro - Test",
+            "AutoCleaner Demo - Test",
             "🎉 Notification de test !\n\nSi vous voyez ce message, les notifications fonctionnent correctement.",
             duration=5
         )
@@ -586,7 +934,7 @@ class SystemTray:
                 item('Ouvrir', self.show_cb, default=True),
                 item('Quitter', self.exit_cb)
             )
-            self.icon = pystray.Icon("AutoCleanerPro", image, "AutoCleaner Pro", menu)
+            self.icon = pystray.Icon("AutoCleanerDemo", image, "AutoCleaner Demo", menu)
             self.icon.run()
         except Exception as e:
             logger.error(f"Tray icon failed: {e}")

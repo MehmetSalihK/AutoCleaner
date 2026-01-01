@@ -4,7 +4,7 @@ import json
 import time
 from datetime import datetime
 
-LOG_FILE = os.path.join(os.path.expanduser("~"), "autocleaner_v4.log")
+LOG_FILE = os.path.join(os.path.expanduser("~"), f"autocleaner_v6_{int(time.time())}.log")
 DELETIONS_LOG = os.path.join(os.path.expanduser("~"), "autocleaner_deletions.jsonl")
 
 # Standard Logger

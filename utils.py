@@ -49,18 +49,19 @@ def show_notification(title, message, duration=5):
     """Show Windows notification using native API."""
     try:
         # Try winotify first (most reliable)
-        from winotify import Notification, audio
+        from winotify import Notification
         
+        icon_path = ""
+        if os.path.exists(os.path.abspath("AutoCleanerLogo.ico")):
+            icon_path = os.path.abspath("AutoCleanerLogo.ico")
+            
         toast = Notification(
-            app_id="AutoCleaner Pro",
+            app_id="AutoCleaner Demo",
             title=title,
             msg=message,
-            duration="short" if duration <= 5 else "long"
+            duration="short" if duration <= 5 else "long",
+            icon=icon_path
         )
-        
-        # Try to add icon
-        if os.path.exists("AutoCleanerLogo.ico"):
-            toast.set_icon("AutoCleanerLogo.ico")
         
         toast.show()
         return True

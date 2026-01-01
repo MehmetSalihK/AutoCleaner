@@ -14,7 +14,7 @@ from ui import ModernApp, SystemTray
 
 def check_single_instance():
     """Ensure only one instance is running using a named mutex."""
-    mutex_name = "AutoCleanerPro_v4_Mutex"
+    mutex_name = "AutoCleaner_v7_Mutex"
     mutex = ctypes.windll.kernel32.CreateMutexW(None, False, mutex_name)
     last_error = ctypes.windll.kernel32.GetLastError()
     
@@ -50,14 +50,17 @@ def background_auto_clean(cleaner):
 def main():
     try:
         # 0. Single Instance Check
+        logger.info("Checking instance...")
         is_unique, mutex = check_single_instance()
         if not is_unique:
-            # Silently exit if already running
+            logger.info("Already running! Exiting.")
             sys.exit(0)
+            
+        logger.info("Instance is unique. Starting setup...")
 
         # 1. Setup
         hide_console()
-        logger.info("AutoCleaner Pro v5.0 Starting...")
+        logger.info("AutoCleaner Demo v1.0 Starting...")
         
         if not is_admin():
             # Re-run with admin privileges
@@ -71,7 +74,14 @@ def main():
                 return
 
         config = load_config()
+        # 2. Initialize Components
+        logger.info("Initializing Cleaner...")
         cleaner = Cleaner()
+        logger.info("Cleaner initialized.")
+
+        # System Tray
+        logger.info("Initializing Tray...")
+        tray = None
 
         # 2. UI & System Tray Setup
         def show_dashboard():
@@ -98,14 +108,17 @@ def main():
             tray = SystemTray(show_dashboard, exit_app)
             tray_thread = threading.Thread(target=tray.run, daemon=True)
             tray_thread.start()
-            time.sleep(0.3)  # Reduced wait time
+            logger.info("Tray thread started.")
+            time.sleep(0.5)  # Allow tray to initialize
         except Exception as e:
             logger.error(f"Failed to initialize tray: {e}")
             # Continue without tray
 
         # Initialize Dashboard
         try:
+            logger.info("Initializing ModernApp...")
             app = ModernApp(cleaner, exit_app)
+            logger.info("ModernApp initialized.")
         except Exception as e:
             logger.error(f"Failed to initialize UI: {e}")
             from tkinter import messagebox

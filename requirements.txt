@@ -16,5 +16,6 @@ psutil>=5.9.0
 # Windows API
 pywin32>=306
 
-# Note: Ce script est optimisé pour Windows
-# Assurez-vous d'avoir Python 3.8+ installé
+
+# Requêtes HTTP (Feedback)
+requests>=2.31.0
